@@ -102,4 +102,5 @@ dist
 
 # TernJS port file
 .tern-port
+.*proces
 config/process.env
