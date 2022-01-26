@@ -1,6 +1,7 @@
 const authConfig = require("../config/auth")
 const User = require("../models").User;
 var bcrypt = require("bcrypt")
+var jwt = require("jsonwebtoken")
 
 const signup = async(req, res, next) => {
     var {
@@ -40,6 +41,37 @@ const signup = async(req, res, next) => {
         })
     })
 }
+
+const login = async(req, res, next) => {
+    console.log(authConfig)
+    var { email, password } = req.body;
+    var user = await User.findOne({ where: { email: email.toLowerCase() }})
+  
+    if(user == null){
+        return res.status(403).send({
+            status: "Account does not exist"
+        })
+    }
+
+    if(!(await bcrypt.compare(password, user.password))){
+        return res.status(401).send({
+            status: "Incorrect Credentials"
+        })
+    }
+
+    var token = jwt.sign({userId: user.id}, authConfig.authSecret, {
+        expiresIn: authConfig.accessTokenDuration
+    });
+    
+    res.status(200).send({
+        status: "Logged In",
+        token,
+        expiresIn: authConfig.accessTokenDuration,
+        user: {...user.dataValues, password: undefined}
+    })
+}
+
 module.exports = {
-    signup
+    signup,
+    login
 }

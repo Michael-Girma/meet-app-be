@@ -5,4 +5,5 @@ var router = express.Router();
 controllers = require("../controllers/auth.js")
 
 router.post('/signup', controllers.signup)
+router.post('/login', controllers.login)
 module.exports = router;
