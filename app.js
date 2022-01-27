@@ -6,6 +6,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 
+var authMiddleware = require("./middlewares/authMiddleware")
+
 var app = express();
 
 
@@ -15,8 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
-app.use('/ping', indexRouter);
-
+app.use('/ping', authMiddleware.verifyToken, indexRouter);
+app.use('/auth', authRouter)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
