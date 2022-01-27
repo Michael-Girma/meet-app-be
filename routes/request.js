@@ -13,4 +13,7 @@ router.post('/:id/reject', controllers.rejectRequest)
 
 router.patch('/:id', controllers.editRequest)
 
+router.delete('/:id', controllers.deleteRequest)
+
+
 module.exports = router;
