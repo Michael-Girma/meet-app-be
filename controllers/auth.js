@@ -1,7 +1,9 @@
 const authConfig = require("../config/auth")
 const User = require("../models").User;
+const BlacklistedToken = require("../models").BlacklistedToken;
 var bcrypt = require("bcrypt")
 var jwt = require("jsonwebtoken")
+var requestService = require("../services/requestServices")
 
 const signup = async(req, res, next) => {
     var {
@@ -69,9 +71,18 @@ const login = async(req, res, next) => {
         expiresIn: authConfig.accessTokenDuration,
         user: {...user.dataValues, password: undefined}
     })
+
+}
+
+const logout = async(req, res, next) => {
+    let token = requestService.getTokenFromRequest(req)
+    return BlacklistedToken.create({token})
+    .then(success => res.status(204).send())
+    .catch(error => req.status(403).send())
 }
 
 module.exports = {
     signup,
-    login
+    login,
+    logout
 }

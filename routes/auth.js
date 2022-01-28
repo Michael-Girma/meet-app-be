@@ -6,4 +6,5 @@ controllers = require("../controllers/auth.js")
 
 router.post('/signup', controllers.signup)
 router.post('/login', controllers.login)
+router.delete('/logout', controllers.logout)
 module.exports = router;
