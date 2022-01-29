@@ -13,12 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Request.belongsTo(models.User, {
         foreignKey: "toUser",
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        as: "ToUser"
       }),
 
       Request.belongsTo(models.User, {
         foreignKey: "fromUser",
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        as: "FromUser"
       })
     }
   }

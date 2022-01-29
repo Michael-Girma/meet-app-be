@@ -51,7 +51,7 @@ const login = async(req, res, next) => {
   
     if(user == null){
         return res.status(403).send({
-            status: "Account does not exist"
+            status: "Incorrect Credentials"
         })
     }
 
@@ -74,6 +74,20 @@ const login = async(req, res, next) => {
 
 }
 
+const getUser = async(req, res, next) => {
+    console.log(req)
+    const userData = requestService.getUserDataFromReq(req)
+    console.log(userData)
+    var user = await User.findOne({
+        where: {
+            id: userData.id
+        }
+    })
+    
+    res.status(200).send({...user.dataValues, password: undefined})
+
+}
+
 const logout = async(req, res, next) => {
     let token = requestService.getTokenFromRequest(req)
     return BlacklistedToken.create({token})
@@ -84,5 +98,6 @@ const logout = async(req, res, next) => {
 module.exports = {
     signup,
     login,
+    getUser,
     logout
 }

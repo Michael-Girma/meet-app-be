@@ -4,7 +4,7 @@ const Request = require('../models').Request
 
 const getUserRequestById = async(req, incomingRequest = false) => {
     var { id } = requestService.getUserDataFromReq(req)
-    var requestId = req.params.id;
+    var requestId = parseInt(req.params.id);
     var condition = {id: requestId}
     if(incomingRequest){
         condition = {...condition, toUser: id}
@@ -14,6 +14,8 @@ const getUserRequestById = async(req, incomingRequest = false) => {
     var requests = await Request.findAll({
         where: condition
     })
+    console.log("CONDITION: ", condition)
+    console.log("RESULTS: ", requests)
     return requests && requests[0]
 }
 
@@ -23,10 +25,14 @@ const getIncoming = async(req, res, next) => {
     return Request.findAll({
         where: {
             toUser: userData.id
+        },
+        include: {
+            model: User,
+            as: "FromUser"
         }
     })
     .then(requests => res.status(200).send(requests))
-    .catch(error => res.status(500).send())
+    .catch(error => res.status(500).send(error))
 }
 
 const getOutgoing = (req, res, next) => {
@@ -34,6 +40,10 @@ const getOutgoing = (req, res, next) => {
     return Request.findAll({
         where: {
             fromUser: userData.id
+        },
+        include: {
+            model: User,
+            as: 'ToUser'
         }
     })
     .then(requests => res.status(200).send(requests))

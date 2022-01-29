@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Request, {
         foreignKey: "fromUser",
-        as: "OutgoingRequests"
+        
+        as: "OutgoingRequests",
       }),
 
       User.hasMany(models.Request, {
